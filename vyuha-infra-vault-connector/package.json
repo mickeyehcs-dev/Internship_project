@@ -1,0 +1,28 @@
+{
+  "name": "vyuha-infra-vault-connector",
+  "version": "2.4.1",
+  "description": "Enterprise Vault Secret Synchronization & Dynamic Leasing Daemon for Vyūha Kubernetes Clusters",
+  "main": "dist/vaultClient.js",
+  "types": "dist/vaultClient.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/vaultClient.js",
+    "dev": "ts-node-dev --respawn src/vaultClient.ts",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.26.2",
+    "pino": "^8.20.0",
+    "pino-pretty": "^11.0.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
+  },
+  "private": true
+}

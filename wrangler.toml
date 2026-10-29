@@ -1,0 +1,31 @@
+name = "vyuhapot-core"
+main = "src/index.ts"
+compatibility_date = "2024-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Dual-domain deception and administrative routing
+routes = [
+  { pattern = "pot.vyuha.me/*", zone_name = "vyuha.me" },
+  { pattern = "vault.vyuha.me/*", zone_name = "vyuha.me" }
+]
+
+# Cloudflare D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "vyuhapot-telemetry"
+database_id = "d1-vyuhapot-001"
+
+# Environment Variables & Default Configurations
+[vars]
+ADMIN_USER = "vyuha_admin"
+# Default admin password hash for "VyuhaSentinel2025!" (SHA-256)
+ADMIN_PASSWORD_HASH = "a7342967e97b5ef9ddef8c058eaba2071cf858619fec384b6a6bfb3a52283b3c"
+SESSION_SECRET = "vyuha_edge_hmac_secret_super_secure_entropy_key_9941a87e02bcf148"
+ALERT_EMAIL_TO = "vyuha.qzz.io@gmail.com"
+EMAIL_API_KEY = "sk_live_fbbf5c9fa7e94510a85bfe9b"
+EMAIL_SENDER_ID = "snd_mv3hqnnk"
+EMAIL_API_ENDPOINT = "https://sender-api.mickey.qzz.io/api/v1/send"
+TARPIT_DELAY_MS = "2500"
+HONEYPOT_REALM = "internal-vault-cluster"
+HONEYPOT_NAME = "vyuha-vault-connector-edge"
+

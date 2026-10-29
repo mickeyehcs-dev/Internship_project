@@ -1,0 +1,32 @@
+{
+  "name": "vyuhapot",
+  "version": "1.0.0",
+  "description": "VyūhaPot: Enterprise Active Defense & Deception Security System on Cloudflare Workers & D1",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "tsc --noEmit",
+    "deploy": "wrangler deploy",
+    "db:init": "wrangler d1 execute vyuhapot-telemetry --file=./schema.sql",
+    "db:init:local": "wrangler d1 execute vyuhapot-telemetry --local --file=./schema.sql",
+    "hash:password": "node scripts/hash-password.mjs",
+    "simulate:attack": "node scripts/simulate-attack.mjs"
+  },
+  "keywords": [
+    "cybersecurity",
+    "active-defense",
+    "honeypot",
+    "deception-technology",
+    "cloudflare-workers",
+    "cloudflare-d1",
+    "soc",
+    "intrusion-detection"
+  ],
+  "author": "Vyūha Cybersecurity Engineering Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240405.0",
+    "typescript": "^5.4.5",
+    "wrangler": "^3.53.1"
+  }
+}
