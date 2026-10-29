@@ -1,6 +1,7 @@
 // ==============================================================================
-// VyūhaPot: Administrative SOC Console & Login Gate Template Engine
+// VyuhaPot: Administrative SOC Console & Login Gate Template Engine
 // Includes Interactive Global Ingress Threat Map & Live IP Threat Intel Panel
+// Free Open-Source Map Engine (Zero API Keys, No Watermarks)
 // ==============================================================================
 
 import { AttackLogRecord, BlockedIpRecord, SocDashboardStats } from './types';
@@ -14,7 +15,7 @@ export function renderLoginPage(errorMessage?: string): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VyūhaPot // SOC Authentication Gate</title>
+  <title>VyuhaPot // SOC Authentication Gate</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -165,7 +166,7 @@ export function renderLoginPage(errorMessage?: string): string {
           <path d="M12 16h.01"/>
         </svg>
       </div>
-      <h1 class="brand-title">VyūhaPot</h1>
+      <h1 class="brand-title">VyuhaPot</h1>
       <p class="brand-subtitle">Active Defense & Deception Telemetry SOC</p>
     </div>
 
@@ -202,7 +203,7 @@ export function renderLoginPage(errorMessage?: string): string {
 
 /**
  * Renders the High-Performance Dark-Themed SOC Operations Interface
- * Enhanced with Live Threat Map and Deep IP Details Forensics Panel
+ * Enhanced with 100% Free Open-Source Threat Map (No API Key Required) and Deep IP Details Forensics Panel
  */
 export function renderDashboardPage(
   stats: SocDashboardStats,
@@ -215,7 +216,7 @@ export function renderDashboardPage(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VyūhaPot // Active Defense SOC Operations</title>
+  <title>VyuhaPot // Active Defense SOC Operations</title>
   
   <!-- Leaflet CSS for Map Panel -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -469,9 +470,9 @@ export function renderDashboardPage(
        ========================================================================== */
     .intel-grid {
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 24px;
-      margin-bottom: 28px;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 20px;
+      margin-bottom: 24px;
     }
 
     @media (max-width: 1280px) {
@@ -492,7 +493,7 @@ export function renderDashboardPage(
     }
 
     .map-header {
-      padding: 16px 20px;
+      padding: 14px 18px;
       background: rgba(255, 255, 255, 0.02);
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
@@ -503,7 +504,7 @@ export function renderDashboardPage(
     }
 
     .map-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -524,14 +525,22 @@ export function renderDashboardPage(
     }
 
     #threat-map {
-      height: 480px;
+      height: 220px;
       width: 100%;
-      background: #060911;
+      background: #060911 !important;
       z-index: 1;
+      border-radius: 0;
+      transition: height 0.25s ease;
+    }
+
+    /* 100% Free OpenStreetMap with Stealth Cyber Dark Mode Filter (Zero API Key, No Watermark) */
+    #threat-map.cyber-dark-mode .leaflet-tile {
+      filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(115%) saturate(25%) !important;
+      -webkit-filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(115%) saturate(25%) !important;
     }
 
     .map-footer {
-      padding: 12px 20px;
+      padding: 10px 18px;
       background: rgba(6, 9, 17, 0.7);
       border-top: 1px solid var(--border-subtle);
       display: flex;
@@ -589,9 +598,9 @@ export function renderDashboardPage(
     }
 
     .inspector-body {
-      padding: 20px;
+      padding: 16px 20px;
       overflow-y: auto;
-      max-height: 520px;
+      max-height: 290px;
       flex: 1;
     }
 
@@ -975,7 +984,7 @@ export function renderDashboardPage(
         </svg>
       </div>
       <div class="nav-title">
-        VyūhaPot <span class="nav-badge">Edge Active Defense</span>
+        VyuhaPot <span class="nav-badge">Edge Active Defense</span>
       </div>
     </div>
 
@@ -1037,6 +1046,7 @@ export function renderDashboardPage(
 
     <!-- ====================================================================
          LIVE THREAT MAP & IP DETAILS FORENSICS SECTION
+         (Powered by 100% Free Open-Source Tiles - Zero API Keys, No Watermarks)
          ==================================================================== -->
     <div class="intel-grid">
       <!-- Left Panel: Global Ingress Threat Map -->
@@ -1046,19 +1056,29 @@ export function renderDashboardPage(
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             Global Ingress Threat Map // Live Anycast Radar
           </div>
-          <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
             <span class="radar-indicator">
               <span class="status-dot"></span>
               RADAR ACTIVE
             </span>
+            <select id="map-style-select" onchange="setMapLayer(this.value)" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-subtle); color: #cbd5e1; font-size: 11px; padding: 4px 8px; border-radius: 6px; outline: none; cursor: pointer;">
+              <option value="dark" selected>Tactical Dark (Free)</option>
+              <option value="satellite">Satellite Recon (Free)</option>
+              <option value="standard">Standard Map (Free)</option>
+            </select>
+            <select id="map-size-select" onchange="setMapHeight(this.value)" title="Adjust map radar display height" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-subtle); color: #cbd5e1; font-size: 11px; padding: 4px 8px; border-radius: 6px; outline: none; cursor: pointer;">
+              <option value="180">Mini (180px)</option>
+              <option value="220" selected>Compact (220px)</option>
+              <option value="300">Standard (300px)</option>
+            </select>
             <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="resetMapView()">
-              Reset View
+              Reset
             </button>
           </div>
         </div>
 
-        <!-- Leaflet Map Container -->
-        <div id="threat-map"></div>
+        <!-- Leaflet Map Container with default cyber-dark-mode class -->
+        <div id="threat-map" class="cyber-dark-mode"></div>
 
         <div class="map-footer">
           <div class="map-legend">
@@ -1071,7 +1091,7 @@ export function renderDashboardPage(
               <span>Active Tripwire Trigger</span>
             </div>
           </div>
-          <div id="map-stats-text">Tracking ${attackLogs.length} recent telemetry points</div>
+          <div id="map-stats-text">Tracking ${attackLogs.length} recent telemetry points (Free Tiles / No API Key)</div>
         </div>
       </div>
 
@@ -1276,6 +1296,7 @@ export function renderDashboardPage(
     let activeSelectedLog = null;
     let threatMap = null;
     let markersLayer = null;
+    let currentTileLayer = null;
     const markerMap = new Map();
 
     // ISO Country Centroid Fallbacks
@@ -1300,26 +1321,71 @@ export function renderDashboardPage(
     });
 
     // --------------------------------------------------------------------------
-    // 1. Interactive Leaflet Map Subsystem
+    // 1. Interactive Leaflet Map Subsystem (100% Free - Zero API Keys, No Watermarks)
     // --------------------------------------------------------------------------
     function initThreatMap() {
       try {
         threatMap = L.map('threat-map', {
           zoomControl: true,
-          attributionControl: false
-        }).setView([25, 10], 2);
+          attributionControl: false,
+          minZoom: 1,
+          maxZoom: 18
+        }).setView([20, 0], 1.6);
 
-        // CartoDB Dark Matter Tiles (High-contrast cyber SOC aesthetic)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-          maxZoom: 19,
-          subdomains: 'abcd'
-        }).addTo(threatMap);
+        // Load Default 100% Free OpenStreetMap with Cyber Dark Mode Filter
+        setMapLayer('dark');
 
         markersLayer = L.layerGroup().addTo(threatMap);
         plotThreatMarkers();
       } catch (err) {
         console.error('Failed to initialize Leaflet Map:', err);
       }
+    }
+
+    function setMapLayer(type) {
+      if (!threatMap) return;
+      if (currentTileLayer) {
+        threatMap.removeLayer(currentTileLayer);
+      }
+      const mapEl = document.getElementById('threat-map');
+
+      if (type === 'satellite') {
+        mapEl.classList.remove('cyber-dark-mode');
+        // Free Public Esri World Imagery (No API key, No watermark)
+        currentTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 18,
+          attribution: 'Esri Satellite'
+        }).addTo(threatMap);
+      } else if (type === 'standard') {
+        mapEl.classList.remove('cyber-dark-mode');
+        // Free Public OpenStreetMap (No API key, No watermark)
+        currentTileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: 'OpenStreetMap'
+        }).addTo(threatMap);
+      } else {
+        // Default: Free OpenStreetMap with Tactical Cyber Dark Mode CSS Filter
+        mapEl.classList.add('cyber-dark-mode');
+        currentTileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: 'OpenStreetMap'
+        }).addTo(threatMap);
+      }
+
+      if (markersLayer) {
+        markersLayer.bringToFront();
+      }
+    }
+
+    function setMapHeight(heightVal) {
+      const mapEl = document.getElementById('threat-map');
+      if (!mapEl) return;
+      mapEl.style.height = heightVal + 'px';
+      setTimeout(() => {
+        if (threatMap) {
+          threatMap.invalidateSize();
+        }
+      }, 150);
     }
 
     function plotThreatMarkers() {
@@ -1422,7 +1488,8 @@ export function renderDashboardPage(
 
     function resetMapView() {
       if (!threatMap) return;
-      threatMap.setView([25, 10], 2);
+      threatMap.setView([20, 0], 1.6);
+      threatMap.invalidateSize();
     }
 
     // --------------------------------------------------------------------------
@@ -1780,7 +1847,7 @@ export function renderQuickBlockConfirmationPage(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VyūhaPot // Edge Ban Confirmation</title>
+  <title>VyuhaPot // Edge Ban Confirmation</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -1866,14 +1933,14 @@ export function renderQuickBlockConfirmationPage(
     <h2 class="title">${success ? 'Edge Isolation Enforced' : 'Quick Block Inactive'}</h2>
     <div class="ip">${escapeHtml(ip)}</div>
     <p class="desc">${escapeHtml(message)}</p>
-    <a href="${socDomain}/dashboard" class="btn">Proceed to VyūhaPot SOC Console &rarr;</a>
+    <a href="${socDomain}/dashboard" class="btn">Proceed to VyuhaPot SOC Console &rarr;</a>
   </div>
 </body>
 </html>`;
 }
 
 function escapeHtml(text: string): string {
-  return String(text)
+  return String(text || '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')

@@ -1,6 +1,6 @@
 /**
  * ==============================================================================
- * Vyūha Infrastructure Core: Vault Synchronization & Token Leasing Client
+ * Vyuha Infrastructure Core: Vault Synchronization & Token Leasing Client
  * Module: @vyuha/infra-vault-connector
  * Security Classification: RESTRICTED // INTERNAL CORP RUNTIME
  * ==============================================================================
@@ -71,7 +71,7 @@ export class VaultConnectorClient {
         'Authorization': `Bearer ${this.config.VAULT_AUTH_BEARER}`,
         'X-Vault-Namespace': this.config.VAULT_NAMESPACE,
         'X-Cluster-Identity': this.config.VAULT_CLUSTER_ID,
-        'User-Agent': 'Vyūha-Infra-Vault-Daemon/2.4.1 (linux; x86_64)',
+        'User-Agent': 'Vyuha-Infra-Vault-Daemon/2.4.1 (linux; x86_64)',
         'Content-Type': 'application/json',
       },
     });
@@ -142,7 +142,7 @@ export class VaultConnectorClient {
         {
           headers: {
             'Authorization': `Bearer ${this.config.VAULT_AUTH_BEARER}`,
-            'User-Agent': 'Vyūha-Rotation-Hook/1.0',
+            'User-Agent': 'Vyuha-Rotation-Hook/1.0',
           },
           timeout: 5000,
         }

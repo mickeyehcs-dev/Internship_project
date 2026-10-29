@@ -1,5 +1,5 @@
 // ==============================================================================
-// VyūhaPot: Edge Worker, Firewall Layer, Auth Gate & SOC Controller
+// VyuhaPot: Edge Worker, Firewall Layer, Auth Gate & SOC Controller
 // ==============================================================================
 
 import { Env, IncidentTelemetry, AttackLogRecord, BlockedIpRecord, SocDashboardStats } from './types';
@@ -26,7 +26,7 @@ export default {
             status: 'error',
             code: 'FIREWALL_EDGE_DROP',
             error: 'Forbidden',
-            message: 'Access dropped by VyūhaPot active defense edge policy.',
+            message: 'Access dropped by VyuhaPot active defense edge policy.',
             incident_ref: `EDGE_BAN_${clientIp}`,
             timestamp: new Date().toISOString()
           }, null, 2),
@@ -41,7 +41,7 @@ export default {
         );
       }
     } catch (dbErr) {
-      console.error('[VyūhaPot Firewall Check DB Error]:', dbErr);
+      console.error('[VyuhaPot Firewall Check DB Error]:', dbErr);
       // Fall through if database warm-up is in progress
     }
 
@@ -160,7 +160,7 @@ async function handleVaultDeception(
       ).run();
     }
   } catch (logErr) {
-    console.error('[VyūhaPot D1 Telemetry Ingestion Error]:', logErr);
+    console.error('[VyuhaPot D1 Telemetry Ingestion Error]:', logErr);
   }
 
   // 2. Dispatch Incident Alert Email asynchronously (Zero worker latency penalty)
@@ -407,7 +407,7 @@ async function verifySession(db: D1Database, sessionToken: string): Promise<bool
 
     return !!record;
   } catch (err) {
-    console.error('[VyūhaPot Session Verification Error]:', err);
+    console.error('[VyuhaPot Session Verification Error]:', err);
     return false;
   }
 }
@@ -584,7 +584,7 @@ async function fetchSocStats(db: D1Database): Promise<SocDashboardStats> {
       topAttackerAsn: topAsnRow?.asn_org || 'N/A'
     };
   } catch (err) {
-    console.error('[VyūhaPot Stats Aggregation Error]:', err);
+    console.error('[VyuhaPot Stats Aggregation Error]:', err);
     return {
       totalInterceptions: 0,
       totalBlocked: 0,

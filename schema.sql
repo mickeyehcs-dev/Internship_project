@@ -1,5 +1,5 @@
 -- ==============================================================================
--- VyūhaPot: Enterprise Active Defense & Deception Security Platform
+-- VyuhaPot: Enterprise Active Defense & Deception Security Platform
 -- Persistence & Telemetry Correlation Schema (Cloudflare D1 / SQLite Engine)
 -- ==============================================================================
 

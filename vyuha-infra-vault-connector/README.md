@@ -1,4 +1,4 @@
-# Vyūha Infrastructure: Vault Connector Daemon (`vyuha-infra-vault-connector`)
+# Vyuha Infrastructure: Vault Connector Daemon (`vyuha-infra-vault-connector`)
 
 > **CONFIDENTIAL // INTERNAL ENGINEERING DISTRIBUTION ONLY**  
 > **Classification:** Restricted Corporate Asset  
@@ -26,7 +26,7 @@ Instead of distributing long-lived credentials across decentralized microservice
                                                         | HTTPS / mTLS
                                                         v (Bearer Auth)
                                          +----------------------------+
-                                         |     Vyūha Vault Cluster    |
+                                         |     Vyuha Vault Cluster    |
                                          |   (vault.vyuha.me/api/v2)  |
                                          |                            |
                                          |  - Token Validation        |

@@ -1,5 +1,5 @@
 // ==============================================================================
-// VyūhaPot: Cryptographic Utilities (Web Crypto API for Edge Workers)
+// VyuhaPot: Cryptographic Utilities (Web Crypto API for Edge Workers)
 // ==============================================================================
 
 /**

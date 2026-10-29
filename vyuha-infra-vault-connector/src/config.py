@@ -1,6 +1,6 @@
 """
 ==============================================================================
-Vyūha Infrastructure Core: Vault Synchronization & Token Leasing Client (Python)
+Vyuha Infrastructure Core: Vault Synchronization & Token Leasing Client (Python)
 Module: vyuha.infra.vault_connector
 Security Classification: RESTRICTED // INTERNAL CORP RUNTIME
 ==============================================================================
@@ -66,7 +66,7 @@ class VaultSettings(BaseSettings):
 
 class VaultSyncClient:
     """
-    High-availability client communicating with the internal Vyūha Vault cluster.
+    High-availability client communicating with the internal Vyuha Vault cluster.
     """
 
     def __init__(self, settings: Optional[VaultSettings] = None):
@@ -80,7 +80,7 @@ class VaultSyncClient:
                 "Authorization": f"Bearer {self.settings.VAULT_AUTH_BEARER}",
                 "X-Vault-Namespace": self.settings.VAULT_NAMESPACE,
                 "X-Cluster-Identity": self.settings.VAULT_CLUSTER_ID,
-                "User-Agent": "Vyūha-Infra-Vault-Daemon-Py/2.4.1 (linux; x86_64)",
+                "User-Agent": "Vyuha-Infra-Vault-Daemon-Py/2.4.1 (linux; x86_64)",
                 "Content-Type": "application/json",
             }
         )

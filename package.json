@@ -1,7 +1,7 @@
 {
   "name": "vyuhapot",
   "version": "1.0.0",
-  "description": "VyūhaPot: Enterprise Active Defense & Deception Security System on Cloudflare Workers & D1",
+  "description": "VyuhaPot: Enterprise Active Defense & Deception Security System on Cloudflare Workers & D1",
   "main": "src/index.ts",
   "scripts": {
     "dev": "wrangler dev",
@@ -22,7 +22,7 @@
     "soc",
     "intrusion-detection"
   ],
-  "author": "Vyūha Cybersecurity Engineering Team",
+  "author": "Vyuha Cybersecurity Engineering Team",
   "license": "Apache-2.0",
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240405.0",

@@ -1,5 +1,5 @@
 // ==============================================================================
-// VyūhaPot: TypeScript Type Definitions & Environment Contracts
+// VyuhaPot: TypeScript Type Definitions & Environment Contracts
 // ==============================================================================
 
 export interface Env {

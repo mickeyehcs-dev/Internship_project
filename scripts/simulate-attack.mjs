@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // ==============================================================================
-// VyūhaPot Attack Simulation & Verification Script
+// VyuhaPot Attack Simulation & Verification Script
 // ==============================================================================
 
 const TARGET_HOST = process.env.TARGET_HOST || 'https://vault.vyuha.me';
@@ -8,7 +8,7 @@ const BAIT_URL = `${TARGET_HOST}/api/v2/tokens/sync`;
 const BAIT_BEARER = 'vyuha_sec_9941a87e02bcf14890a2948e718b';
 
 console.log('==================================================================');
-console.log('  VyūhaPot Threat Emulation & Honeypot Interception Test');
+console.log('  VyuhaPot Threat Emulation & Honeypot Interception Test');
 console.log('==================================================================');
 console.log(`Target Bait Endpoint:  ${BAIT_URL}`);
 console.log(`Leaked Authorization:  Bearer ${BAIT_BEARER}`);

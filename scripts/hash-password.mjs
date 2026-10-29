@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // ==============================================================================
-// VyūhaPot Operator Passphrase Hash Generator (Node.js CLI)
+// VyuhaPot Operator Passphrase Hash Generator (Node.js CLI)
 // ==============================================================================
 
 import crypto from 'node:crypto';
@@ -18,7 +18,7 @@ if (passArg) {
   process.exit(0);
 }
 
-rl.question('Enter Passphrase to Hash for VyūhaPot ADMIN_PASSWORD_HASH: ', (answer) => {
+rl.question('Enter Passphrase to Hash for VyuhaPot ADMIN_PASSWORD_HASH: ', (answer) => {
   if (!answer) {
     console.error('Passphrase cannot be empty.');
     process.exit(1);
@@ -30,7 +30,7 @@ rl.question('Enter Passphrase to Hash for VyūhaPot ADMIN_PASSWORD_HASH: ', (ans
 function generateAndPrint(password) {
   const hash = crypto.createHash('sha256').update(password).digest('hex');
   console.log('\n======================================================');
-  console.log('   VyūhaPot Operator Credential Hash Generated');
+  console.log('   VyuhaPot Operator Credential Hash Generated');
   console.log('======================================================');
   console.log(`Original Passphrase:  ${password}`);
   console.log(`SHA-256 Hash:         ${hash}`);

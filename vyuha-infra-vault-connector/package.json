@@ -1,7 +1,7 @@
 {
   "name": "vyuha-infra-vault-connector",
   "version": "2.4.1",
-  "description": "Enterprise Vault Secret Synchronization & Dynamic Leasing Daemon for Vyūha Kubernetes Clusters",
+  "description": "Enterprise Vault Secret Synchronization & Dynamic Leasing Daemon for Vyuha Kubernetes Clusters",
   "main": "dist/vaultClient.js",
   "types": "dist/vaultClient.d.ts",
   "scripts": {

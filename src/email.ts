@@ -1,5 +1,5 @@
 // ==============================================================================
-// VyūhaPot: Automated Incident Email Dispatcher & HTML Telemetry Formatter
+// VyuhaPot: Automated Incident Email Dispatcher & HTML Telemetry Formatter
 // ==============================================================================
 
 import { Env, IncidentTelemetry } from './types';
@@ -43,7 +43,7 @@ export function buildIncidentEmailHtml(
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🚨 [VyūhaPot Security Alert] Intrusion Detected</title>
+  <title>🚨 [VyuhaPot Security Alert] Intrusion Detected</title>
   <style>
     body {
       margin: 0;
@@ -212,7 +212,7 @@ export function buildIncidentEmailHtml(
       <div class="header">
         <div class="badge">Active Defense Deception Intercept</div>
         <h1 class="title">Intrusion Detected on Bait Node</h1>
-        <p class="subtitle">VyūhaPot Honeypot tripwire sprang at Cloudflare Edge network node</p>
+        <p class="subtitle">VyuhaPot Honeypot tripwire sprang at Cloudflare Edge network node</p>
       </div>
 
       <!-- Main Body -->
@@ -259,7 +259,7 @@ export function buildIncidentEmailHtml(
           </a>
           <br>
           <a href="${socDashboardUrl}" class="btn-dashboard" target="_blank">
-            Inspect in VyūhaPot SOC Operations Console
+            Inspect in VyuhaPot SOC Operations Console
           </a>
           <p style="margin-top: 10px; font-size: 11px; color: #64748b;">
             Clicking the button immediately updates the Cloudflare D1 distributed edge firewall and drops subsequent traffic with HTTP 403 Forbidden.
@@ -275,7 +275,7 @@ export function buildIncidentEmailHtml(
 
       <!-- Footer -->
       <div class="footer">
-        VyūhaPot Autonomous Deception Engine • Cloudflare Workers + D1 Persistence • Confidential Security Dispatch
+        VyuhaPot Autonomous Deception Engine • Cloudflare Workers + D1 Persistence • Confidential Security Dispatch
       </div>
     </div>
   </div>
@@ -313,7 +313,7 @@ export async function dispatchIncidentAlertEmail(
     const endpoint = env.EMAIL_API_ENDPOINT || 'https://sender-api.mickey.qzz.io/api/v1/send';
     const payload = {
       to: env.ALERT_EMAIL_TO,
-      subject: `🚨 [VyūhaPot Security Alert] Intrusion Detected on Bait Node (${telemetry.ip})`,
+      subject: `🚨 [VyuhaPot Security Alert] Intrusion Detected on Bait Node (${telemetry.ip})`,
       html: htmlReport,
       sender_id: env.EMAIL_SENDER_ID || 'snd_mv3h6ko5'
     };
@@ -329,15 +329,15 @@ export async function dispatchIncidentAlertEmail(
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error(`[VyūhaPot Email Dispatch Failure] Status: ${response.status}, Detail: ${errText}`);
+      console.error(`[VyuhaPot Email Dispatch Failure] Status: ${response.status}, Detail: ${errText}`);
       return { success: false, status: response.status, error: errText };
     }
 
-    console.log(`[VyūhaPot Email Dispatch Success] Incident alert sent to ${env.ALERT_EMAIL_TO} for IP ${telemetry.ip}`);
+    console.log(`[VyuhaPot Email Dispatch Success] Incident alert sent to ${env.ALERT_EMAIL_TO} for IP ${telemetry.ip}`);
     return { success: true, status: response.status };
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : String(err);
-    console.error(`[VyūhaPot Email Dispatch Exception]: ${errorMsg}`);
+    console.error(`[VyuhaPot Email Dispatch Exception]: ${errorMsg}`);
     return { success: false, error: errorMsg };
   }
 }

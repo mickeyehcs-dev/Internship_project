@@ -1,9 +1,9 @@
-# VyūhaPot: Enterprise Active Defense & Deception Security Platform
+# VyuhaPot: Enterprise Active Defense & Deception Security Platform
 ## Technical Architecture Whitepaper, Threat Analysis & Operations Runbook
 **Document Identifier:** `SEC-ARCH-VYUHA-2025-V1`  
 **Classification:** RESTRICTED // CYBERSECURITY ARCHITECTURE SPECIFICATION  
 **Platform Target:** Cloudflare Workers (V8 Edge Compute) & Cloudflare D1 (Serverless SQLite)  
-**Author:** Vyūha Threat Research & Active Defense Engineering Team  
+**Author:** Vyuha Threat Research & Active Defense Engineering Team  
 **Date of Release:** Current Production Baseline  
 
 ---
@@ -19,7 +19,7 @@ In this operational reality, credential leakage has become the primary initial a
 +--------------------------------------------------------------------------------------------------+
 |                                    TRADITIONAL VS. ACTIVE DEFENSE                                |
 +------------------------------------+-------------------------------------------------------------+
-| Classical Signature IDS / SIEM     | VyūhaPot Active Deception                                   |
+| Classical Signature IDS / SIEM     | VyuhaPot Active Deception                                   |
 +------------------------------------+-------------------------------------------------------------+
 | High false-positive rate (~85%)    | Absolute zero false-positive rate (P = 1.0)                  |
 | Reactive: Detects after breach     | Pre-emptive: Traps attacker during reconnaissance           |
@@ -32,23 +32,23 @@ In this operational reality, credential leakage has become the primary initial a
 ### 1.2 The Asymmetric Reality of Adversarial Reconnaissance
 Once an attacker or automated scraping bot captures what appears to be a corporate credential, they possess an inherent advantage: they can probe external endpoints anonymously through residential proxy networks, VPN tunnels, or bulletproof hosting providers. Perimeter defenses often fail to distinguish between legitimate developer traffic and an external adversary using valid tokens.
 
-**VyūhaPot** re-engineers this asymmetric relationship. By deliberately seeding high-fidelity decoy credentials into code repositories, VyūhaPot transforms leaked secrets into active tripwires. The adversary incurs computing and operational costs attempting to exploit the bait, while simultaneously forfeiting their IP address, Autonomous System Number (ASN), tooling signatures, and geolocation to the enterprise Security Operations Center (SOC).
+**VyuhaPot** re-engineers this asymmetric relationship. By deliberately seeding high-fidelity decoy credentials into code repositories, VyuhaPot transforms leaked secrets into active tripwires. The adversary incurs computing and operational costs attempting to exploit the bait, while simultaneously forfeiting their IP address, Autonomous System Number (ASN), tooling signatures, and geolocation to the enterprise Security Operations Center (SOC).
 
 ---
 
-## 2. Vyūha Strategic Deception Philosophy
+## 2. Vyuha Strategic Deception Philosophy
 
 ### 2.1 The Sanskrit Strategic Formation
-The system derives its name from **Vyūha** (व्यूह), the classical Sanskrit military science of dynamic labyrinthine battle formations. In classical strategic treatises (including the *Mahābhārata* and *Arthaśāstra*), a *Vyūha* is not a static wall; it is an active, responsive labyrinth designed to absorb an advancing adversary, entice them into an apparently vulnerable corridor, sever their lines of communication, and neutralize them within a controlled kill zone.
+The system derives its name from **Vyuha** (व्यूह), the classical Sanskrit military science of dynamic labyrinthine battle formations. In classical strategic treatises (including the *Mahabharata* and *Arthashastra*), a *Vyuha* is not a static wall; it is an active, responsive labyrinth designed to absorb an advancing adversary, entice them into an apparently vulnerable corridor, sever their lines of communication, and neutralize them within a controlled kill zone.
 
-VyūhaPot operationalizes this military doctrine within modern cloud architecture:
+VyuhaPot operationalizes this military doctrine within modern cloud architecture:
 
 1. **The Enticement (Ketu):** High-fidelity decoy repository (`vyuha-infra-vault-connector`) containing realistic configuration artifacts (`.env.backup`).
-2. **The Labyrinth (Chakravyūha):** The bait hostname (`vault.vyuha.me`) acts as a convincing microservice gateway that accepts the credential, delays execution through an asynchronous tarpit, and emits authentic enterprise error payloads.
+2. **The Labyrinth (Chakravyuha):** The bait hostname (`vault.vyuha.me`) acts as a convincing microservice gateway that accepts the credential, delays execution through an asynchronous tarpit, and emits authentic enterprise error payloads.
 3. **The Trap & Retaliation (Moksha):** The intruder's telemetry is captured at the edge, logged into Cloudflare D1, dispatched to the SOC duty pager via high-speed email, and permanently isolated across the global edge firewall.
 
 ```
-                           THE VYŪHA STRATEGIC LABYRINTH
+                           THE VYUHA STRATEGIC LABYRINTH
                            
         [ Adversary Scraper ]
                  |
@@ -61,7 +61,7 @@ VyūhaPot operationalizes this military doctrine within modern cloud architectur
                  v
    +---------------------------+
    | Phase 2: Labyrinth Trap   |  Target: vault.vyuha.me/api/v2/tokens/sync
-   | (Chakravyūha - The Edge)  |  - Synchronous Ingress Forensics committed to D1
+   | (Chakravyuha - The Edge)  |  - Synchronous Ingress Forensics committed to D1
    |                           |  - Asynchronous Tarpit (2,500ms Connection Stall)
    |                           |  - Plausible Microservice Failure Emulation
    +-------------+-------------+
@@ -78,19 +78,19 @@ Traditional Intrusion Detection Systems (IDS) evaluate heuristic rules, regular 
 
 $$\mathbb{P}(\text{Malicious Intent} \mid \text{Bait Interaction}) = 1.0$$
 
-Because decoy credentials are never provisioned to legitimate engineers, integrated into production services, or documented in production registries, **any entity interacting with a VyūhaPot bait node is undeniably an unauthorized intruder or malicious automated scraper**. Every alert emitted by VyūhaPot represents an actionable, verified security incident.
+Because decoy credentials are never provisioned to legitimate engineers, integrated into production services, or documented in production registries, **any entity interacting with a VyuhaPot bait node is undeniably an unauthorized intruder or malicious automated scraper**. Every alert emitted by VyuhaPot represents an actionable, verified security incident.
 
 ---
 
 ## 3. System Architecture & End-to-End Data Flow
 
-VyūhaPot runs entirely on Cloudflare's serverless edge infrastructure, utilizing **Cloudflare Workers** (V8 isolate execution across 300+ global data centers) and **Cloudflare D1** (serverless distributed SQLite database with read-replication).
+VyuhaPot runs entirely on Cloudflare's serverless edge infrastructure, utilizing **Cloudflare Workers** (V8 isolate execution across 300+ global data centers) and **Cloudflare D1** (serverless distributed SQLite database with read-replication).
 
 ### 3.1 Architectural Topology
 
 ```
 +====================================================================================================================+
-|                                              VYŪHAPOT SYSTEM ARCHITECTURE                                          |
+|                                              VYUHAPOT SYSTEM ARCHITECTURE                                          |
 +====================================================================================================================+
 
    PUBLIC REPOSITORIES / GITHUB / GITLAB
@@ -175,7 +175,7 @@ VyūhaPot runs entirely on Cloudflare's serverless edge infrastructure, utilizin
 
 ## 4. Forensics & Telemetry Schema Analysis
 
-Persistence in VyūhaPot is governed by Cloudflare D1. The relational database schema is structured into three discrete operational models:
+Persistence in VyuhaPot is governed by Cloudflare D1. The relational database schema is structured into three discrete operational models:
 
 ### 4.1 Ingress Telemetry: `attack_logs`
 
@@ -242,7 +242,7 @@ Sessions are stored using cryptographic SHA-256 hashes of high-entropy random to
 
 ## 5. Operator Runbook & Deployment Guide
 
-This section outlines the exact terminal commands, configuration steps, and Standard Operating Procedures (SOPs) required to deploy and operate VyūhaPot in production.
+This section outlines the exact terminal commands, configuration steps, and Standard Operating Procedures (SOPs) required to deploy and operate VyuhaPot in production.
 
 ### 5.1 System Prerequisites
 - Node.js runtime `>= 18.0.0` and npm `>= 9.0.0`
@@ -332,11 +332,11 @@ In your Cloudflare DNS dashboard for `vyuha.me`, ensure the following CNAME or W
 
 ```
 +=============================================================================+
-|                       VYŪHAPOT INCIDENT HANDLING SOP                        |
+|                       VYUHAPOT INCIDENT HANDLING SOP                        |
 +=============================================================================+
 
   [ ALERT RECEIPT ]
-  Operator receives email: "🚨 [VyūhaPot Security Alert] Intrusion Detected..."
+  Operator receives email: "🚨 [VyuhaPot Security Alert] Intrusion Detected..."
          |
          v
   [ PHASE 1: IMMEDIATE THREAT NEUTRALIZATION (< 30 Seconds) ]
@@ -369,7 +369,7 @@ In your Cloudflare DNS dashboard for `vyuha.me`, ensure the following CNAME or W
 
 ## 7. Live Evaluator Demonstration & Proof-of-Concept Script
 
-To validate the end-to-end functionality of VyūhaPot, follow this reproducible demonstration scenario simulating an external threat actor.
+To validate the end-to-end functionality of VyuhaPot, follow this reproducible demonstration scenario simulating an external threat actor.
 
 ### Scenario Narrative
 An external bot scans GitHub, discovers the decoy repository `vyuha-infra-vault-connector`, extracts `.env.backup`, and attempts to authenticate against `vault.vyuha.me`.
@@ -417,7 +417,7 @@ x-vault-revocation-id: rev_a81f9b2d
 
 ### Step 4: Verification of Automated Security Alert Email
 Within seconds of the probe, the platform email gateway delivers a responsive security alert to `security-ops@vyuha.me`:
-- **Subject:** `🚨 [VyūhaPot Security Alert] Intrusion Detected on Bait Node`
+- **Subject:** `🚨 [VyuhaPot Security Alert] Intrusion Detected on Bait Node`
 - **Body Content:**
   - Tripwire Trap: `vault-connector-edge`
   - Attacker IP: *(Your public egress IP)*
@@ -450,7 +450,7 @@ x-vyuhapot-firewall: BLOCKED_AT_EDGE
   "status": "error",
   "code": "FIREWALL_EDGE_DROP",
   "error": "Forbidden",
-  "message": "Access dropped by VyūhaPot active defense edge policy.",
+  "message": "Access dropped by VyuhaPot active defense edge policy.",
   "incident_ref": "EDGE_BAN_...",
   "timestamp": "2025-10-29T13:42:01.120Z"
 }
@@ -461,7 +461,7 @@ x-vyuhapot-firewall: BLOCKED_AT_EDGE
 2. Enter operator credentials (`vyuha_admin` / `VyuhaSentinel2025!`).
 3. Observe the operational visualization suite:
    - **Real-Time Stat Cards:** Total Interceptions (+1), Edge Blocked Entities (+1), Active Honeypot Nodes.
-   - **Global Ingress Threat Map:** The attacker's geographic origin is plotted as an active pulsing threat beacon on the CartoDB Dark Matter Anycast radar grid.
+   - **Global Ingress Threat Map:** The attacker's geographic origin is plotted as an active pulsing threat beacon on the interactive Anycast radar grid.
    - **IP Details & Threat Intelligence Inspector Panel:** Selecting the attacker highlights deep forensics:
      - Real-Time Edge Ban Status (`BLOCKED AT EDGE (403 DROP)`)
      - Physical Geolocation (Country, City, Region, Lat/Long, Timezone)
@@ -492,7 +492,7 @@ $$\text{Signature} = \text{HMAC}_{\text{SHA-256}}(\text{Payload}, K_{\text{sessi
 Any tampering with the target IP or expiration timestamp invalidates the signature, preventing attackers from weaponizing the block endpoint against legitimate IP ranges.
 
 ### 8.3 Minimal Surface Area & Serverless Resilience
-Because VyūhaPot executes entirely within ephemeral V8 isolates across Cloudflare's global edge:
+Because VyuhaPot executes entirely within ephemeral V8 isolates across Cloudflare's global edge:
 - There is no operating system kernel to exploit.
 - There are no container runtimes vulnerable to container escapes.
 - Volumetric Distributed Denial of Service (DDoS) attacks are absorbed natively by Cloudflare's Anycast backbone.
@@ -501,4 +501,4 @@ Because VyūhaPot executes entirely within ephemeral V8 isolates across Cloudfla
 
 ## 9. Conclusion
 
-VyūhaPot provides modern enterprise organizations with an active defense system capable of turning leaked code artifacts into high-value tactical intelligence. By operating directly at Cloudflare's serverless edge, the platform ensures sub-millisecond firewall enforcement, autonomous incident notification, and zero false-positive detection, shifting the economic and operational balance of power permanently in favor of the enterprise defender.
+VyuhaPot provides modern enterprise organizations with an active defense system capable of turning leaked code artifacts into high-value tactical intelligence. By operating directly at Cloudflare's serverless edge, the platform ensures sub-millisecond firewall enforcement, autonomous incident notification, and zero false-positive detection, shifting the economic and operational balance of power permanently in favor of the enterprise defender.
