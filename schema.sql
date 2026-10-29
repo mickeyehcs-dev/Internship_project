@@ -15,6 +15,10 @@ CREATE TABLE IF NOT EXISTS attack_logs (
     method TEXT NOT NULL,
     path TEXT NOT NULL,
     headers_json TEXT,
+    latitude REAL,
+    longitude REAL,
+    region TEXT,
+    colo TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

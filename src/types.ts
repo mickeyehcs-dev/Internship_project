@@ -34,6 +34,10 @@ export interface AttackLogRecord {
   method: string;
   path: string;
   headers_json: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  region?: string | null;
+  colo?: string | null;
   created_at: string;
 }
 
@@ -53,6 +57,10 @@ export interface IncidentTelemetry {
   ip: string;
   country: string;
   city: string;
+  region?: string;
+  colo?: string;
+  latitude?: number;
+  longitude?: number;
   asnOrg: string;
   userAgent: string;
   method: string;

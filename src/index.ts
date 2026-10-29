@@ -79,43 +79,86 @@ async function handleVaultDeception(
   const userAgent = request.headers.get('user-agent') || 'Unknown User-Agent';
 
   // Extract edge geo-telemetry from Cloudflare edge headers and cf object
-  const country = request.headers.get('cf-ipcountry') || 
-                  (request as any).cf?.country || 
-                  'XX';
-  const city = request.headers.get('cf-ipcity') || 
-               (request as any).cf?.city || 
-               'Unknown';
-  const asnOrg = (request as any).cf?.asOrganization || 
-                 ((request as any).cf?.asn ? `AS${(request as any).cf.asn}` : 'Unknown ASN');
+  const cfData = (request as any).cf || {};
+  const country = request.headers.get('cf-ipcountry') || cfData.country || 'XX';
+  const city = request.headers.get('cf-ipcity') || cfData.city || 'Unknown';
+  const region = request.headers.get('cf-region') || cfData.region || cfData.regionCode || '';
+  const colo = cfData.colo || '';
+  const timezone = cfData.timezone || '';
+  const postalCode = cfData.postalCode || '';
+  const httpProtocol = cfData.httpProtocol || 'HTTP/2';
+  const tlsCipher = cfData.tlsCipher || '';
+  const latitude = parseFloat(request.headers.get('cf-iplatitude') || cfData.latitude || '0');
+  const longitude = parseFloat(request.headers.get('cf-iplongitude') || cfData.longitude || '0');
+  const asnOrg = cfData.asOrganization || (cfData.asn ? `AS${cfData.asn}` : 'Unknown ASN');
 
   // Extract and serialize ingress headers for forensics
   const rawHeadersObj: Record<string, string> = {};
   for (const [key, val] of request.headers.entries()) {
-    // Preserve security headers, authorization tokens, user agents, cookies
     rawHeadersObj[key] = val;
   }
-  const headersJson = JSON.stringify(rawHeadersObj);
+
+  // Enriched forensic metadata payload
+  const enrichedPayload = {
+    headers: rawHeadersObj,
+    telemetry: {
+      latitude: isNaN(latitude) ? 0 : latitude,
+      longitude: isNaN(longitude) ? 0 : longitude,
+      region,
+      colo,
+      timezone,
+      postalCode,
+      httpProtocol,
+      tlsCipher,
+      asn: cfData.asn || null,
+      asOrganization: asnOrg
+    }
+  };
+  const headersJson = JSON.stringify(enrichedPayload);
 
   const trapName = env.HONEYPOT_NAME || 'vault-connector-edge';
   const nowIso = new Date().toISOString();
 
-  // 1. Synchronously commit intrusion event to Cloudflare D1
+  // 1. Synchronously commit intrusion event to Cloudflare D1 with schema fallback
   try {
-    await env.DB.prepare(
-      `INSERT INTO attack_logs 
-        (trap_name, ip, country, city, asn_org, user_agent, method, path, headers_json, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
-    ).bind(
-      trapName,
-      clientIp,
-      country,
-      city,
-      asnOrg,
-      userAgent,
-      method,
-      path,
-      headersJson
-    ).run();
+    try {
+      await env.DB.prepare(
+        `INSERT INTO attack_logs 
+          (trap_name, ip, country, city, asn_org, user_agent, method, path, headers_json, latitude, longitude, region, colo, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
+      ).bind(
+        trapName,
+        clientIp,
+        country,
+        city,
+        asnOrg,
+        userAgent,
+        method,
+        path,
+        headersJson,
+        isNaN(latitude) ? null : latitude,
+        isNaN(longitude) ? null : longitude,
+        region || null,
+        colo || null
+      ).run();
+    } catch {
+      // Fallback for earlier database schemas lacking latitude/longitude columns
+      await env.DB.prepare(
+        `INSERT INTO attack_logs 
+          (trap_name, ip, country, city, asn_org, user_agent, method, path, headers_json, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`
+      ).bind(
+        trapName,
+        clientIp,
+        country,
+        city,
+        asnOrg,
+        userAgent,
+        method,
+        path,
+        headersJson
+      ).run();
+    }
   } catch (logErr) {
     console.error('[VyūhaPot D1 Telemetry Ingestion Error]:', logErr);
   }
@@ -239,9 +282,18 @@ async function handleAdministrativeConsole(
   // --------------------------------------------------------------------------
   if (path === '/dashboard' || path === '/' || path === '') {
     const stats = await fetchSocStats(env.DB);
-    const attackLogsResult = await env.DB.prepare(
-      'SELECT id, trap_name, ip, country, city, asn_org, user_agent, method, path, headers_json, created_at FROM attack_logs ORDER BY created_at DESC LIMIT 100'
-    ).all<AttackLogRecord>();
+    let attackLogs: AttackLogRecord[] = [];
+    try {
+      const attackLogsResult = await env.DB.prepare(
+        'SELECT * FROM attack_logs ORDER BY created_at DESC LIMIT 150'
+      ).all<AttackLogRecord>();
+      attackLogs = attackLogsResult.results || [];
+    } catch {
+      const fallbackResult = await env.DB.prepare(
+        'SELECT id, trap_name, ip, country, city, asn_org, user_agent, method, path, headers_json, created_at FROM attack_logs ORDER BY created_at DESC LIMIT 150'
+      ).all<AttackLogRecord>();
+      attackLogs = fallbackResult.results || [];
+    }
 
     const blockedIpsResult = await env.DB.prepare(
       'SELECT ip, reason, blocked_at FROM blocked_ips ORDER BY blocked_at DESC'
@@ -249,7 +301,7 @@ async function handleAdministrativeConsole(
 
     const html = renderDashboardPage(
       stats,
-      attackLogsResult.results || [],
+      attackLogs,
       blockedIpsResult.results || [],
       env.ADMIN_USER || 'vyuha_admin'
     );

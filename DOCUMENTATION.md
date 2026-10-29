@@ -191,6 +191,10 @@ CREATE TABLE IF NOT EXISTS attack_logs (
     method TEXT NOT NULL,
     path TEXT NOT NULL,
     headers_json TEXT,
+    latitude REAL,
+    longitude REAL,
+    region TEXT,
+    colo TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 ```
@@ -208,6 +212,9 @@ CREATE TABLE IF NOT EXISTS attack_logs (
 | `method` | `request.method` | Verifies intent (e.g., `POST` token validation vs. `GET` discovery probe). |
 | `path` | `request.url` | Pinpoints targeted microservice endpoints and path traversal attempts. |
 | `headers_json`| Serialized Headers | Captures raw Authorization bearer tokens, custom trace IDs, and client proxies. |
+| `latitude` / `longitude` | `request.cf.latitude/longitude` | Direct physical coordinates plotted onto the live Global Ingress Threat Map. |
+| `region` | `request.cf.region` | State, province, or administrative subdivision for geographical triage. |
+| `colo` | `request.cf.colo` | Three-letter IATA airport code of Cloudflare edge data center receiving probe. |
 | `created_at` | D1 Timestamp | High-resolution UTC timestamp used for correlating SIEM and firewall logs. |
 
 ### 4.2 Distributed Edge Firewall: `blocked_ips`
@@ -262,7 +269,7 @@ Wrangler will output the unique database ID. Update your `wrangler.toml` file wi
 [[d1_databases]]
 binding = "DB"
 database_name = "vyuhapot-telemetry"
-database_id = "YOUR_ACTUAL_D1_DATABASE_ID_HERE"
+database_id = "77950d12-b0bb-4a08-a727-c53a1d9cd52c"
 ```
 
 #### Step 2: Execute Schema Migration
@@ -452,11 +459,19 @@ x-vyuhapot-firewall: BLOCKED_AT_EDGE
 ### Step 7: SOC Operations Dashboard Audit
 1. Navigate to `https://pot.vyuha.me/login`.
 2. Enter operator credentials (`vyuha_admin` / `VyuhaSentinel2025!`).
-3. Observe real-time stats:
-   - **Total Interceptions** updated (+1).
-   - **Edge Blocked Entities** updated (+1).
-   - Incident entry visible in the **Ingress Attack Telemetry** table.
-   - Attacker IP displayed in the **Edge Blocklist Manager** with 1-click `[Unblock]` control.
+3. Observe the operational visualization suite:
+   - **Real-Time Stat Cards:** Total Interceptions (+1), Edge Blocked Entities (+1), Active Honeypot Nodes.
+   - **Global Ingress Threat Map:** The attacker's geographic origin is plotted as an active pulsing threat beacon on the CartoDB Dark Matter Anycast radar grid.
+   - **IP Details & Threat Intelligence Inspector Panel:** Selecting the attacker highlights deep forensics:
+     - Real-Time Edge Ban Status (`BLOCKED AT EDGE (403 DROP)`)
+     - Physical Geolocation (Country, City, Region, Lat/Long, Timezone)
+     - Cloudflare Edge Ingress PoP (Airport Colo code, e.g. `IAD`, `FRA`)
+     - Autonomous System attribution (ASN & Organization name)
+     - Adversary Tooling & Ingress Path (`TruffleHog Scanner`, `POST /api/v2/tokens/sync`)
+     - Direct 1-Click OSINT Pivots (`AbuseIPDB`, `VirusTotal`, `GreyNoise`, `Shodan`)
+     - Instant Action Controls (Block, Unblock, Raw Headers, JSON Dossier Export)
+   - **Ingress Attack Telemetry Table:** Row highlighted in sync with the map and inspector.
+   - **Edge Blocklist Manager:** Attacker IP cataloged with ban reason and 1-click unblock control.
 
 ---
 

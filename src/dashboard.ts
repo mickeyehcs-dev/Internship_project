@@ -1,5 +1,6 @@
 // ==============================================================================
 // VyūhaPot: Administrative SOC Console & Login Gate Template Engine
+// Includes Interactive Global Ingress Threat Map & Live IP Threat Intel Panel
 // ==============================================================================
 
 import { AttackLogRecord, BlockedIpRecord, SocDashboardStats } from './types';
@@ -201,6 +202,7 @@ export function renderLoginPage(errorMessage?: string): string {
 
 /**
  * Renders the High-Performance Dark-Themed SOC Operations Interface
+ * Enhanced with Live Threat Map and Deep IP Details Forensics Panel
  */
 export function renderDashboardPage(
   stats: SocDashboardStats,
@@ -214,9 +216,15 @@ export function renderDashboardPage(
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VyūhaPot // Active Defense SOC Operations</title>
+  
+  <!-- Leaflet CSS for Map Panel -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
     :root {
       --bg-base: #060911;
@@ -225,9 +233,10 @@ export function renderDashboardPage(
       --border-subtle: rgba(255, 255, 255, 0.08);
       --border-medium: rgba(255, 255, 255, 0.15);
       --accent-red: #ef4444;
-      --accent-red-glow: rgba(239, 68, 68, 0.25);
+      --accent-red-glow: rgba(239, 68, 68, 0.35);
       --accent-blue: #38bdf8;
       --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --text-dim: #64748b;
@@ -387,8 +396,8 @@ export function renderDashboardPage(
     /* Main Container */
     .main-content {
       flex: 1;
-      padding: 28px 32px;
-      max-width: 1600px;
+      padding: 24px 32px;
+      max-width: 1720px;
       margin: 0 auto;
       width: 100%;
     }
@@ -398,7 +407,7 @@ export function renderDashboardPage(
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 20px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .stat-card {
@@ -453,6 +462,258 @@ export function renderDashboardPage(
       display: flex;
       align-items: center;
       gap: 6px;
+    }
+
+    /* ==========================================================================
+       MAP & IP INTEL SPLIT SECTION
+       ========================================================================== */
+    .intel-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 1280px) {
+      .intel-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Map Panel */
+    .map-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .map-header {
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .map-title {
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .radar-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent-emerald);
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+
+    #threat-map {
+      height: 480px;
+      width: 100%;
+      background: #060911;
+      z-index: 1;
+    }
+
+    .map-footer {
+      padding: 12px 20px;
+      background: rgba(6, 9, 17, 0.7);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .map-legend {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    /* IP Forensics Inspector Panel */
+    .ip-inspector-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .inspector-header {
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .inspector-title {
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .inspector-body {
+      padding: 20px;
+      overflow-y: auto;
+      max-height: 520px;
+      flex: 1;
+    }
+
+    .active-target-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border: 1px solid var(--border-medium);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .target-ip-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .target-ip-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+    }
+
+    .target-ip-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .intel-section {
+      background: rgba(8, 12, 20, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .intel-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .intel-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 12px;
+    }
+    .intel-row:last-child {
+      border-bottom: none;
+    }
+
+    .intel-label {
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .intel-val {
+      color: #f1f5f9;
+      font-family: 'JetBrains Mono', monospace;
+      text-align: right;
+      word-break: break-all;
+    }
+
+    .pivot-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .pivot-btn {
+      flex: 1;
+      min-width: 90px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: #93c5fd;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .pivot-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-blue);
+      color: #ffffff;
+    }
+
+    .inspector-actions {
+      padding: 14px 20px;
+      background: rgba(6, 9, 17, 0.6);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     /* Panels & Tables */
@@ -543,6 +804,11 @@ export function renderDashboardPage(
       background: rgba(255, 255, 255, 0.02);
     }
 
+    tr.row-selected td {
+      background: rgba(56, 189, 248, 0.08) !important;
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
@@ -558,6 +824,13 @@ export function renderDashboardPage(
       border: 1px solid rgba(239, 68, 68, 0.25);
       padding: 2px 8px;
       border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .ip-badge:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
     }
 
     .ip-badge.is-blocked {
@@ -597,7 +870,7 @@ export function renderDashboardPage(
       font-size: 14px;
     }
 
-    /* Modal for forensics preview */
+    /* Forensics Modal */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -609,7 +882,7 @@ export function renderDashboardPage(
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 100;
+      z-index: 1000;
       padding: 20px;
     }
 
@@ -666,11 +939,27 @@ export function renderDashboardPage(
       transform: translateY(100px);
       opacity: 0;
       transition: all 0.3s ease;
-      z-index: 200;
+      z-index: 2000;
     }
     #toast.show {
       transform: translateY(0);
       opacity: 1;
+    }
+
+    /* Custom Leaflet Dark Mode Popup */
+    .leaflet-popup-content-wrapper {
+      background: #0e1626 !important;
+      color: #f1f5f9 !important;
+      border: 1px solid #ef4444 !important;
+      border-radius: 8px !important;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8) !important;
+    }
+    .leaflet-popup-tip {
+      background: #0e1626 !important;
+      border: 1px solid #ef4444 !important;
+    }
+    .leaflet-container {
+      font-family: inherit !important;
     }
   </style>
 </head>
@@ -746,6 +1035,79 @@ export function renderDashboardPage(
       </div>
     </div>
 
+    <!-- ====================================================================
+         LIVE THREAT MAP & IP DETAILS FORENSICS SECTION
+         ==================================================================== -->
+    <div class="intel-grid">
+      <!-- Left Panel: Global Ingress Threat Map -->
+      <div class="map-panel">
+        <div class="map-header">
+          <div class="map-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Global Ingress Threat Map // Live Anycast Radar
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="radar-indicator">
+              <span class="status-dot"></span>
+              RADAR ACTIVE
+            </span>
+            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="resetMapView()">
+              Reset View
+            </button>
+          </div>
+        </div>
+
+        <!-- Leaflet Map Container -->
+        <div id="threat-map"></div>
+
+        <div class="map-footer">
+          <div class="map-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #ef4444; box-shadow: 0 0 6px #ef4444;"></div>
+              <span>Blocked IP (403 Drop)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: #f59e0b; box-shadow: 0 0 6px #f59e0b;"></div>
+              <span>Active Tripwire Trigger</span>
+            </div>
+          </div>
+          <div id="map-stats-text">Tracking ${attackLogs.length} recent telemetry points</div>
+        </div>
+      </div>
+
+      <!-- Right Panel: IP Forensics & Deep Threat Intel Panel -->
+      <div class="ip-inspector-panel" id="ip-inspector-card">
+        <div class="inspector-header">
+          <div class="inspector-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>
+            IP Details & Threat Intelligence Inspector
+          </div>
+          <span id="inspector-status-badge" class="nav-badge" style="background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #93c5fd;">
+            SELECT TARGET
+          </span>
+        </div>
+
+        <div class="inspector-body" id="inspector-content">
+          <!-- Dynamic IP Inspector Content Populated via JS -->
+          <div class="empty-state">
+            Click on any IP address or map marker to load deep threat forensics.
+          </div>
+        </div>
+
+        <div class="inspector-actions" id="inspector-actions-bar" style="display: none;">
+          <button id="inspector-block-btn" class="btn btn-danger" onclick="triggerInspectorBlock()">
+            [Block at Edge]
+          </button>
+          <button class="btn btn-secondary" onclick="triggerInspectorHeaders()">
+            Raw Headers
+          </button>
+          <button class="btn btn-secondary" onclick="exportActiveIpJson()">
+            Export Dossier
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Active Incident Telemetry Table -->
     <div class="panel">
       <div class="panel-header">
@@ -790,13 +1152,13 @@ export function renderDashboardPage(
             ` : attackLogs.map(log => {
               const isBlocked = blockedIps.some(b => b.ip === log.ip);
               return `
-                <tr id="log-row-${log.id}">
+                <tr id="log-row-${log.id}" onclick="selectIncidentById('${log.id}')" style="cursor: pointer;">
                   <td class="font-mono" style="color: var(--text-dim); white-space: nowrap;">${escapeHtml(log.created_at)}</td>
                   <td><span class="trap-tag">${escapeHtml(log.trap_name)}</span></td>
                   <td>
-                    <span class="ip-badge ${isBlocked ? 'is-blocked' : ''}">
+                    <span class="ip-badge ${isBlocked ? 'is-blocked' : ''}" onclick="event.stopPropagation(); selectIncidentById('${log.id}')">
                       ${escapeHtml(log.ip)}
-                      <button class="copy-btn" title="Copy IP" onclick="copyText('${escapeHtml(log.ip)}')">
+                      <button class="copy-btn" title="Copy IP" onclick="event.stopPropagation(); copyText('${escapeHtml(log.ip)}')">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                       </button>
                     </span>
@@ -814,7 +1176,7 @@ export function renderDashboardPage(
                   <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-muted);" title="${escapeHtml(log.user_agent || '')}">
                     ${escapeHtml(log.user_agent || 'None')}
                   </td>
-                  <td style="text-align: right; white-space: nowrap;">
+                  <td style="text-align: right; white-space: nowrap;" onclick="event.stopPropagation()">
                     <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="viewForensics('${log.id}')">
                       Headers
                     </button>
@@ -822,7 +1184,7 @@ export function renderDashboardPage(
                       <span style="font-size: 11px; color: #ef4444; font-weight: 700; margin-left: 6px;">BLOCKED</span>
                     ` : `
                       <button class="btn btn-danger" style="padding: 4px 10px; font-size: 11px; margin-left: 6px;" onclick="blockIp('${escapeHtml(log.ip)}', 'Honeypot Trigger: ${escapeHtml(log.trap_name)}')">
-                        [Block at Edge]
+                        [Block]
                       </button>
                     `}
                   </td>
@@ -903,12 +1265,385 @@ export function renderDashboardPage(
   <!-- Toast Element -->
   <div id="toast"></div>
 
-  <!-- Embedded Raw Headers Dictionary for fast client preview -->
-  <script>
-    const HEADERS_CACHE = ${JSON.stringify(
-      Object.fromEntries(attackLogs.map(l => [String(l.id), l.headers_json || '{}']))
-    )};
+  <!-- Leaflet JS for Interactive Map -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+  <!-- Client-Side Map, Threat Intel & Telemetry Controller -->
+  <script>
+    // Injected Data Models
+    const ATTACK_LOGS = ${JSON.stringify(attackLogs)};
+    const BLOCKED_IPS = ${JSON.stringify(blockedIps)};
+    let activeSelectedLog = null;
+    let threatMap = null;
+    let markersLayer = null;
+    const markerMap = new Map();
+
+    // ISO Country Centroid Fallbacks
+    const COUNTRY_COORDS = {
+      'US': [37.0902, -95.7129], 'CA': [56.1304, -106.3468], 'GB': [55.3781, -3.4360],
+      'DE': [51.1657, 10.4515], 'FR': [46.2276, 2.2137], 'NL': [52.1326, 5.2913],
+      'RU': [61.5240, 105.3188], 'CN': [35.8617, 104.1954], 'IN': [20.5937, 78.9629],
+      'JP': [36.2048, 138.2529], 'SG': [1.3521, 103.8198], 'AU': [-25.2744, 133.7751],
+      'BR': [-14.2350, -51.9253], 'ZA': [-30.5595, 22.9375], 'IE': [53.1424, -7.6921],
+      'SE': [60.1282, 18.6435], 'FI': [61.9241, 25.7482], 'PL': [51.9194, 19.1451],
+      'UA': [48.3794, 31.1656], 'RO': [45.9432, 24.9668], 'CH': [46.8182, 8.2275],
+      'AT': [47.5162, 14.5501], 'IT': [41.8719, 12.5674], 'ES': [40.4637, -3.7492],
+      'IL': [31.0461, 34.8516], 'KR': [35.9078, 127.7669], 'HK': [22.3193, 114.1694]
+    };
+
+    // Initialize Dashboard on Load
+    document.addEventListener('DOMContentLoaded', () => {
+      initThreatMap();
+      if (ATTACK_LOGS.length > 0) {
+        selectIncidentById(ATTACK_LOGS[0].id);
+      }
+    });
+
+    // --------------------------------------------------------------------------
+    // 1. Interactive Leaflet Map Subsystem
+    // --------------------------------------------------------------------------
+    function initThreatMap() {
+      try {
+        threatMap = L.map('threat-map', {
+          zoomControl: true,
+          attributionControl: false
+        }).setView([25, 10], 2);
+
+        // CartoDB Dark Matter Tiles (High-contrast cyber SOC aesthetic)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+          maxZoom: 19,
+          subdomains: 'abcd'
+        }).addTo(threatMap);
+
+        markersLayer = L.layerGroup().addTo(threatMap);
+        plotThreatMarkers();
+      } catch (err) {
+        console.error('Failed to initialize Leaflet Map:', err);
+      }
+    }
+
+    function plotThreatMarkers() {
+      if (!markersLayer) return;
+      markersLayer.clearLayers();
+      markerMap.clear();
+
+      const bounds = [];
+
+      ATTACK_LOGS.forEach(log => {
+        const coords = resolveCoordinates(log);
+        if (!coords) return;
+
+        const isBlocked = BLOCKED_IPS.some(b => b.ip === log.ip);
+        const markerColor = isBlocked ? '#ef4444' : '#f59e0b';
+        const pulseColor = isBlocked ? 'rgba(239, 68, 68, 0.4)' : 'rgba(245, 158, 11, 0.4)';
+
+        // Pulsing SVG Tactical Radar Icon
+        const iconHtml = \`
+          <div style="position: relative; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
+            <div style="position: absolute; width: 22px; height: 22px; border-radius: 50%; background: \${pulseColor}; animation: pulse 1.8s infinite;"></div>
+            <div style="width: 10px; height: 10px; border-radius: 50%; background: \${markerColor}; border: 2px solid #ffffff; box-shadow: 0 0 8px \${markerColor};"></div>
+          </div>
+        \`;
+
+        const customIcon = L.divIcon({
+          html: iconHtml,
+          className: 'custom-radar-marker',
+          iconSize: [24, 24],
+          iconAnchor: [12, 12]
+        });
+
+        const marker = L.marker([coords[0], coords[1]], { icon: customIcon });
+
+        const popupContent = \`
+          <div style="font-family: inherit; font-size: 12px; min-width: 200px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-weight: 800; font-family: monospace; color: \${markerColor}; font-size: 13px;">\${escapeHtml(log.ip)}</span>
+              <span style="font-size: 10px; padding: 2px 5px; border-radius: 4px; background: rgba(255,255,255,0.08);">\${escapeHtml(log.country || 'XX')}</span>
+            </div>
+            <div style="color: #cbd5e1; margin-bottom: 4px;">\${escapeHtml(log.city || 'Unknown City')}, \${escapeHtml(log.country || 'Unknown')}</div>
+            <div style="color: #94a3b8; font-size: 11px; margin-bottom: 8px;">ASN: \${escapeHtml(log.asn_org || 'N/A')}</div>
+            <div style="display: flex; gap: 6px;">
+              <button onclick="selectIncidentById('\${log.id}')" style="flex: 1; background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">
+                Inspect Intel
+              </button>
+              \${!isBlocked ? \`
+                <button onclick="blockIp('\${escapeHtml(log.ip)}')" style="background: #dc2626; color: #fff; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">
+                  Block
+                </button>
+              \` : ''}
+            </div>
+          </div>
+        \`;
+
+        marker.bindPopup(popupContent);
+        marker.on('click', () => selectIncidentById(log.id));
+
+        marker.addTo(markersLayer);
+        markerMap.set(String(log.id), marker);
+        bounds.push(coords);
+      });
+
+      if (bounds.length > 0 && threatMap) {
+        threatMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 6 });
+      }
+    }
+
+    function resolveCoordinates(log) {
+      // 1. Direct coordinates from Cloudflare
+      if (log.latitude && log.longitude && log.latitude !== 0 && log.longitude !== 0) {
+        return [log.latitude, log.longitude];
+      }
+
+      // 2. Parse from headers_json telemetry payload if present
+      try {
+        const parsed = JSON.parse(log.headers_json || '{}');
+        if (parsed.telemetry?.latitude && parsed.telemetry?.longitude) {
+          const lat = parseFloat(parsed.telemetry.latitude);
+          const lng = parseFloat(parsed.telemetry.longitude);
+          if (!isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0) {
+            return [lat, lng];
+          }
+        }
+      } catch {}
+
+      // 3. Fallback to Country centroid with subtle hash-based jitter
+      const countryCode = (log.country || '').toUpperCase();
+      if (COUNTRY_COORDS[countryCode]) {
+        const base = COUNTRY_COORDS[countryCode];
+        // Jitter based on IP string to separate multiple pins in the same country
+        const hash = Array.from(log.ip).reduce((acc, c) => acc + c.charCodeAt(0), 0);
+        const jitterLat = ((hash % 100) - 50) * 0.05;
+        const jitterLng = (((hash * 3) % 100) - 50) * 0.05;
+        return [base[0] + jitterLat, base[1] + jitterLng];
+      }
+
+      return null;
+    }
+
+    function resetMapView() {
+      if (!threatMap) return;
+      threatMap.setView([25, 10], 2);
+    }
+
+    // --------------------------------------------------------------------------
+    // 2. IP Forensics & Deep Threat Intel Inspector
+    // --------------------------------------------------------------------------
+    function selectIncidentById(id) {
+      const log = ATTACK_LOGS.find(l => String(l.id) === String(id));
+      if (!log) return;
+
+      activeSelectedLog = log;
+
+      // Highlight selected table row
+      document.querySelectorAll('#incident-table tbody tr').forEach(tr => {
+        tr.classList.remove('row-selected');
+      });
+      const targetRow = document.getElementById('log-row-' + log.id);
+      if (targetRow) {
+        targetRow.classList.add('row-selected');
+      }
+
+      // Pan map to attacker coordinates
+      const coords = resolveCoordinates(log);
+      if (coords && threatMap) {
+        threatMap.flyTo([coords[0], coords[1]], 6, { duration: 1.2 });
+        const marker = markerMap.get(String(log.id));
+        if (marker) {
+          setTimeout(() => marker.openPopup(), 1250);
+        }
+      }
+
+      // Populate Inspector Card
+      renderInspectorPanel(log);
+    }
+
+    function renderInspectorPanel(log) {
+      const isBlocked = BLOCKED_IPS.some(b => b.ip === log.ip);
+
+      // Parse metadata from headers_json
+      let parsedMetadata = {};
+      try {
+        const obj = JSON.parse(log.headers_json || '{}');
+        parsedMetadata = obj.telemetry || {};
+      } catch {}
+
+      const coords = resolveCoordinates(log);
+      const coordsText = coords ? \`\${coords[0].toFixed(4)}, \${coords[1].toFixed(4)}\` : 'Undetermined';
+      const coloText = log.colo || parsedMetadata.colo || 'Global Anycast';
+      const regionText = log.region || parsedMetadata.region || 'N/A';
+      const timezoneText = parsedMetadata.timezone || 'UTC';
+      const protocolText = parsedMetadata.httpProtocol || 'HTTP/2';
+      const tlsCipher = parsedMetadata.tlsCipher || 'TLS_AES_256_GCM_SHA384';
+
+      // Status Badge
+      const statusBadge = document.getElementById('inspector-status-badge');
+      if (isBlocked) {
+        statusBadge.textContent = 'BLOCKED AT EDGE (403)';
+        statusBadge.style.background = 'rgba(239, 68, 68, 0.2)';
+        statusBadge.style.borderColor = '#ef4444';
+        statusBadge.style.color = '#fca5a5';
+      } else {
+        statusBadge.textContent = 'ACTIVE THREAT (MONITORED)';
+        statusBadge.style.background = 'rgba(245, 158, 11, 0.2)';
+        statusBadge.style.borderColor = '#f59e0b';
+        statusBadge.style.color = '#fde68a';
+      }
+
+      // Build Inspector HTML
+      const html = \`
+        <!-- Target IP Header Banner -->
+        <div class="active-target-banner">
+          <div class="target-ip-wrap">
+            <span class="target-ip-label">Target Adversary Identity</span>
+            <div class="target-ip-val">
+              <span>\${escapeHtml(log.ip)}</span>
+              <button class="copy-btn" title="Copy IP" onclick="copyText('\${escapeHtml(log.ip)}')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+          <div>
+            <span class="trap-tag">\${escapeHtml(log.trap_name)}</span>
+          </div>
+        </div>
+
+        <!-- Section 1: Physical Geolocation & Edge PoP -->
+        <div class="intel-section">
+          <div class="intel-section-title">
+            <span>Physical Geolocation & Edge Ingress</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/></svg>
+          </div>
+          <div class="intel-row">
+            <span class="intel-label">Country:</span>
+            <span class="intel-val"><strong>\${escapeHtml(log.country || 'Unknown')}</strong></span>
+          </div>
+          <div class="intel-row">
+            <span class="intel-label">City / Metro:</span>
+            <span class="intel-val">\${escapeHtml(log.city || 'Unknown')}\${regionText !== 'N/A' ? ' (' + escapeHtml(regionText) + ')' : ''}</span>
+          </div>
+          <div class="intel-row">
+            <span class="intel-label">GPS Coordinates:</span>
+            <span class="intel-val" style="color: #38bdf8;">\${coordsText}</span>
+          </div>
+          <div class="intel-row">
+            <span class="intel-label">Cloudflare Edge PoP (Colo):</span>
+            <span class="intel-val">\${escapeHtml(coloText)}</span>
+          </div>
+          <div class="intel-row">
+            <span class="intel-label">Timezone:</span>
+            <span class="intel-val">\${escapeHtml(timezoneText)}</span>
+          </div>
+        </div>
+
+        <!-- Section 2: Autonomous System (ASN) & Network Infrastructure -->
+        <div class="intel-section">
+          <div class="intel-section-title">
+            <span>Network & Autonomous System (ASN)</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          </div>
+          <div class="intel-row">
+            <span class="intel-label">ASN / Organization:</span>
+            <span class="intel-val">\${escapeHtml(log.asn_org || 'Unknown ASN')}</span>
+          </div>
+          <div class="intel-row">
+            <span class="intel-label">Protocol:</span>
+            <span class="intel-val">\${escapeHtml(protocolText)}</span>
+          </div>
+          <div class="intel-row">
+            <span class="intel-label">Cipher Suite:</span>
+            <span class="intel-val" style="font-size: 11px;">\${escapeHtml(tlsCipher)}</span>
+          </div>
+        </div>
+
+        <!-- Section 3: Adversary Tooling & Attack Vector -->
+        <div class="intel-section">
+          <div class="intel-section-title">
+            <span>Adversary Tooling & Vector</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>
+          </div>
+          <div class="intel-row">
+            <span class="intel-label">Target Path:</span>
+            <span class="intel-val" style="color: #f59e0b;">\${escapeHtml(log.method)} \${escapeHtml(log.path)}</span>
+          </div>
+          <div class="intel-row">
+            <span class="intel-label">User-Agent:</span>
+            <span class="intel-val" style="font-size: 11px; max-width: 260px;" title="\${escapeHtml(log.user_agent || '')}">
+              \${escapeHtml(log.user_agent || 'Empty User-Agent')}
+            </span>
+          </div>
+          <div class="intel-row">
+            <span class="intel-label">Incident Timestamp:</span>
+            <span class="intel-val">\${escapeHtml(log.created_at)} UTC</span>
+          </div>
+        </div>
+
+        <!-- Section 4: External Threat Intelligence OSINT Pivots -->
+        <div class="intel-section">
+          <div class="intel-section-title">
+            <span>External Threat Intelligence Pivots</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </div>
+          <div class="pivot-links">
+            <a href="https://www.abuseipdb.com/check/\${encodeURIComponent(log.ip)}" target="_blank" class="pivot-btn">
+              AbuseIPDB &nearr;
+            </a>
+            <a href="https://www.virustotal.com/gui/ip-address/\${encodeURIComponent(log.ip)}" target="_blank" class="pivot-btn">
+              VirusTotal &nearr;
+            </a>
+            <a href="https://viz.greynoise.io/ip/\${encodeURIComponent(log.ip)}" target="_blank" class="pivot-btn">
+              GreyNoise &nearr;
+            </a>
+            <a href="https://www.shodan.io/host/\${encodeURIComponent(log.ip)}" target="_blank" class="pivot-btn">
+              Shodan &nearr;
+            </a>
+          </div>
+        </div>
+      \`;
+
+      document.getElementById('inspector-content').innerHTML = html;
+
+      // Update Actions Bar
+      const actionsBar = document.getElementById('inspector-actions-bar');
+      actionsBar.style.display = 'flex';
+
+      const blockBtn = document.getElementById('inspector-block-btn');
+      if (isBlocked) {
+        blockBtn.textContent = 'Unblock IP';
+        blockBtn.className = 'btn btn-emerald';
+        blockBtn.onclick = () => unblockIp(log.ip);
+      } else {
+        blockBtn.textContent = '[Block at Edge]';
+        blockBtn.className = 'btn btn-danger';
+        blockBtn.onclick = () => blockIp(log.ip, 'Honeypot Trigger: ' + log.trap_name);
+      }
+    }
+
+    function triggerInspectorBlock() {
+      if (activeSelectedLog) {
+        blockIp(activeSelectedLog.ip, 'Honeypot Trigger: ' + activeSelectedLog.trap_name);
+      }
+    }
+
+    function triggerInspectorHeaders() {
+      if (activeSelectedLog) {
+        viewForensics(activeSelectedLog.id);
+      }
+    }
+
+    function exportActiveIpJson() {
+      if (!activeSelectedLog) return;
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(activeSelectedLog, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "vyuha_ip_dossier_" + activeSelectedLog.ip.replace(/[^a-zA-Z0-9]/g, '_') + ".json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    // --------------------------------------------------------------------------
+    // 3. UI Helpers, API Interactivity, & Modals
+    // --------------------------------------------------------------------------
     function showToast(msg) {
       const toast = document.getElementById('toast');
       toast.textContent = msg;
@@ -923,7 +1658,8 @@ export function renderDashboardPage(
     }
 
     function viewForensics(id) {
-      const raw = HEADERS_CACHE[String(id)] || '{}';
+      const log = ATTACK_LOGS.find(l => String(l.id) === String(id));
+      const raw = log?.headers_json || '{}';
       try {
         const parsed = JSON.parse(raw);
         document.getElementById('modal-content').textContent = JSON.stringify(parsed, null, 2);
@@ -952,7 +1688,7 @@ export function renderDashboardPage(
         const res = await fetch('/admin/api/block', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ip, reason: reason || 'Manual Admin Action' })
+          body: JSON.stringify({ ip, reason: reason || 'Manual Admin Action via SOC Console' })
         });
         const data = await res.json();
         if (data.success) {
@@ -1008,13 +1744,22 @@ export function renderDashboardPage(
     }
 
     function exportLogsJson() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(${JSON.stringify(attackLogs)}, null, 2));
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ATTACK_LOGS, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
       downloadAnchor.setAttribute("download", "vyuhapot_telemetry_" + new Date().toISOString() + ".json");
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
+    }
+
+    function escapeHtml(text) {
+      return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
   </script>
 </body>
