@@ -13,7 +13,7 @@ routes = [
 [[d1_databases]]
 binding = "DB"
 database_name = "vyuhapot-telemetry"
-database_id = "d1-vyuhapot-001"
+database_id = "77950d12-b0bb-4a08-a727-c53a1d9cd52c"
 
 # Environment Variables & Default Configurations
 [vars]
